@@ -307,3 +307,34 @@ h3 {
     padding: 4.5rem 0 3.5rem;
   }
 }
+
+.project-hero-logo {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: var(--shadow);
+  margin: 2.25rem 0 0;
+  max-width: min(760px, 100%);
+  overflow: hidden;
+  padding: clamp(0.65rem, 1.8vw, 1rem);
+}
+
+.project-hero-logo img {
+  display: block;
+  height: auto;
+  max-height: 230px;
+  object-fit: contain;
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .project-hero-logo {
+    border-radius: 22px;
+    margin-top: 1.75rem;
+    max-width: 100%;
+  }
+
+  .project-hero-logo img {
+    max-height: 170px;
+  }
+}
