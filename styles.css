@@ -313,16 +313,16 @@ h3 {
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.035);
   box-shadow: var(--shadow);
-  margin: 2.25rem 0 0;
+  margin: 1.75rem 0 0;
   max-width: min(760px, 100%);
   overflow: hidden;
-  padding: clamp(0.65rem, 1.8vw, 1rem);
+  padding: clamp(0.45rem, 1.3vw, 0.75rem);
 }
 
 .project-hero-logo img {
   display: block;
   height: auto;
-  max-height: 230px;
+  max-height: 190px;
   object-fit: contain;
   width: 100%;
 }
@@ -335,6 +335,6 @@ h3 {
   }
 
   .project-hero-logo img {
-    max-height: 170px;
+    max-height: 145px;
   }
 }
