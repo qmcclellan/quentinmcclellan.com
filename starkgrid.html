@@ -16,10 +16,11 @@
         <a class="brand" href="index.html" aria-label="Quentin McClellan portfolio home">Quentin McClellan</a>
         <nav class="site-nav" aria-label="Primary navigation">
           <a href="index.html">Home</a>
-          <a aria-current="page" href="starkgrid.html">StarkGrid case study</a>
+          <a aria-current="page" href="starkgrid.html">StarkGrid</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
           <a href="mailto:contact@quentinmcclellan.com">Email</a>
           <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="index.html#resume">Resume</a>
         </nav>
       </div>
     </header>
@@ -33,16 +34,9 @@
           digital and physical artifacts through clear module responsibilities, source-backed evidence, policy-gated orchestration, and
           read-only review surfaces.
         </p>
-        <figure class="project-hero-logo" aria-label="StarkGrid project logo">
-          <img
-            src="assets/starkgrid-logo-horizontal-dark.png"
-            alt="StarkGrid logo with bull mark and halo"
-            width="1200"
-            height="360"
-          />
-        </figure>
         <div class="cta-row" aria-label="Case study actions">
           <a class="button primary" href="#proof">Review proof snapshot</a>
+          <a class="button" href="#audio-validation">Review audio lane</a>
           <a class="button" href="#caveats">Read caveats</a>
         </div>
       </section>
@@ -65,41 +59,130 @@
             <p class="eyebrow">Architecture</p>
             <h2>Module boundaries are the product discipline.</h2>
           </div>
+          <p>
+            StarkGrid is built as a multi-module Java/Maven pipeline running on Kafka. Each module owns a clear responsibility.
+            Active modules in the current working system:
+          </p>
           <div class="module-grid" aria-label="StarkGrid module summary">
-            <article><strong>Iris</strong><span>Connectors and external intake paths.</span></article>
-            <article><strong>Janus</strong><span>Ingestion gateway and artifact intake.</span></article>
-            <article><strong>Demeter</strong><span>Watchers, segmentation, and deterministic work units.</span></article>
-            <article><strong>Argus</strong><span>OCR, text extraction, and structural extraction.</span></article>
-            <article><strong>Hermes</strong><span>Metadata enrichment, tagging, and classification.</span></article>
-            <article><strong>Moirai</strong><span>Artifact identity and lineage management.</span></article>
-            <article><strong>Mnemosyne</strong><span>Registry, memory, and knowledge relationships.</span></article>
-            <article><strong>Hephaestus</strong><span>Transformation, vectorization pathway, and feature extraction.</span></article>
-            <article><strong>Hecate</strong><span>Workflow orchestration and policy-gated actions.</span></article>
-            <article><strong>Atlas</strong><span>Storage and artifact persistence.</span></article>
-            <article><strong>Ares</strong><span>Distributed compute pathway.</span></article>
-            <article><strong>Athena</strong><span>Analytics, reporting, and read-only evidence review.</span></article>
+            <article><strong>Janus</strong><span>Ingestion gateway and artifact intake. Accepts files, validates identity, and emits work units downstream.</span></article>
+            <article><strong>Demeter</strong><span>Watchers, segmentation, and deterministic work unit routing. Handles DLQ routing for ROOT_NOT_FOUND errors.</span></article>
+            <article><strong>Argus</strong><span>OCR, text extraction, and structural extraction. Emits manifest transitions. Async manifest transition writer validated.</span></article>
+            <article><strong>Themis</strong><span>Policy enforcement and routing decisions. Consumes from Argus and routes enrichment downstream.</span></article>
+            <article><strong>Hermes</strong><span>Metadata enrichment, tagging, and classification. Registry records +4 per audio lane run.</span></article>
+            <article><strong>Hephaestus</strong><span>Transformation, vectorization pathway, and feature extraction. Vector backend contract under active hardening.</span></article>
+            <article><strong>Mnemosyne</strong><span>Registry, memory, and knowledge relationships. Stores enriched artifact records for search and review.</span></article>
+            <article><strong>Hecate</strong><span>Workflow orchestration and policy-gated actions. n8n integration runs in manual test-mode with webhook arming.</span></article>
+            <article><strong>Atlas</strong><span>Storage and artifact persistence. NFS-backed artifact store; bind-mount failure visibility validated.</span></article>
+            <article><strong>Athena</strong><span>React analytics dashboard. Read-only evidence review: search, pipeline runs, benchmarks, and DLQ visibility.</span></article>
+            <article><strong>athena-observer</strong><span>FastAPI evidence backend. Serves metrics/log-derived signals to Athena; 100 of 342 recent signals surfaced.</span></article>
+            <article><strong>Iris / Ares / Moirai</strong><span>Connectors, distributed compute pathway, and artifact lineage management. Scoped for future pipeline expansion.</span></article>
           </div>
         </div>
       </section>
 
-      <section id="proof" class="section container split">
-        <div>
-          <p class="eyebrow">Validated proof snapshot</p>
-          <h2>A final Rocketbook proof run produced source-backed distributed worker evidence.</h2>
-          <p>
-            The sanitized proof summary supports a controlled MVP/demo claim: StarkGrid can surface source-backed operational evidence and
-            distributed worker visibility in a governed lab demonstration. It is not a production customer deployment claim.
-          </p>
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Multi-node execution</p>
+          <h2>Two-node lab with remote GPU-capable worker evidence.</h2>
         </div>
-        <aside class="proof-card">
-          <h3>Public-safe evidence</h3>
-          <dl class="metrics-list">
-            <div><dt>Final Rocketbook proof run</dt><dd>rocketbook-20260603T014846Z</dd></div>
-            <div><dt>sourceBacked/documents</dt><dd>1842</dd></div>
-            <div><dt>Distributed worker evidence source</dt><dd>athena-runtime-plans-recent</dd></div>
-            <div><dt>Remote worker evidence</dt><dd>Ultron GTX 1080 GPU-capable worker visibility</dd></div>
-          </dl>
-        </aside>
+        <div class="split">
+          <div>
+            <p>
+              StarkGrid runs distributed across two lab nodes. Jarvis is the primary control-plane: Kafka/Redpanda, all Spring Boot modules,
+              Athena, and athena-observer. Ultron is a GTX 1080 GPU-capable remote worker: Whisper audio transcription sidecar, OCR
+              acceleration pathway (not enabled for current demos), and embedding pathway (not enabled).
+            </p>
+            <p>
+              Remote worker evidence is captured through athena-observer: the distributed worker status snapshot shows Ultron's GPU presence,
+              worker identity, and evidence kind without exposing private machine details.
+            </p>
+          </div>
+          <aside class="proof-card" aria-label="Multi-node evidence">
+            <h3>Distributed worker evidence</h3>
+            <dl class="metrics-list">
+              <div><dt>workerNode</dt><dd>ultron</dd></div>
+              <div><dt>workerGpuDetected</dt><dd>true</dd></div>
+              <div><dt>workerGpuName</dt><dd>NVIDIA GeForce GTX 1080</dd></div>
+              <div><dt>evidenceKind</dt><dd>remote-node-status-snapshot</dd></div>
+              <div><dt>source</dt><dd>athena-runtime-plans-recent</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section id="proof" class="section alt-section">
+        <div class="container split">
+          <div>
+            <p class="eyebrow">Validated proof snapshot</p>
+            <h2>A final Rocketbook proof run produced source-backed distributed worker evidence.</h2>
+            <p>
+              The sanitized proof summary supports a controlled MVP/demo claim: StarkGrid can surface source-backed operational evidence and
+              distributed worker visibility in a governed lab demonstration. It is not a production customer deployment claim.
+            </p>
+            <p class="caveat-note">
+              <strong>Caveats:</strong> <code>gpuOcrEnabled=false</code> and <code>embeddingsEnabled=false</code> are deliberate guardrails.
+              The receipt shows remote worker visibility and GPU-capable node evidence, not production GPU OCR or production embedding acceleration.
+            </p>
+          </div>
+          <aside class="proof-card">
+            <h3>Public-safe evidence</h3>
+            <dl class="metrics-list">
+              <div><dt>Final Rocketbook proof run</dt><dd>rocketbook-20260603T014846Z</dd></div>
+              <div><dt>sourceBacked / documents</dt><dd>1842</dd></div>
+              <div><dt>groupedDocuments</dt><dd>1842</dd></div>
+              <div><dt>distributedWorkerEvidence.captured</dt><dd>true</dd></div>
+              <div><dt>Distributed worker evidence source</dt><dd>athena-runtime-plans-recent</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section id="audio-validation" class="section alt-section">
+        <div class="container split audio-validation-split">
+          <div>
+            <p class="eyebrow">StarkGrid Audio Lane Validation</p>
+            <h2>Audio notes → searchable StarkGrid evidence</h2>
+            <p><strong>Audio notes became searchable evidence.</strong></p>
+            <p>
+              StarkGrid validated an MVP audio lane where a local audio note was staged under <code>/starkgrid/audio-inbox</code>, manually
+              dispatched from an approved <code>AudioTranscriptionCandidateV1</code> preview, transcribed by the Ultron GTX 1080 Whisper sidecar,
+              emitted as transcript TXT, JSON, SRT, and manifest artifacts, ingested by Jarvis through the normal StarkGrid pipeline, and
+              surfaced in Search as an <code>audio-transcript</code> result.
+            </p>
+            <p>
+              The same validation captured a practical recovery story: an NFS restart caused stale <code>/starkgrid</code> bind mounts in running
+              worker containers. Search, Demeter, Argus, and Themis showed stale/local views; Demeter DLQ captured <code>ROOT_NOT_FOUND</code>
+              for <code>DIG-E1F41CFF</code>; Argus DLQ captured <code>NoSuchFileException</code> / <code>ATLAS_IO_FAILURE</code> for
+              <code>DIG-46A831EB</code>; and the final clean run succeeded after worker containers were force-recreated.
+            </p>
+            <p class="caveat-note">
+              Caveat: Whisper transcripts are AI-generated derived evidence and must be reviewed against source audio for high-stakes use.
+              This was manually dispatched in MVP form; it is not a production GPU OCR, production GPU embedding, or cloud transcription claim.
+            </p>
+          </div>
+          <aside class="proof-card audio-proof-card">
+            <h3>Local-first ingestion demo: audio → transcript → searchable evidence</h3>
+            <dl class="metrics-list">
+              <div><dt>Final DigPlate</dt><dd>DIG-358A92B5</dd></div>
+              <div><dt>Benchmark</dt><dd>audio-all-clean-search-20260607T023050Z</dd></div>
+              <div><dt>Input root</dt><dd>/starkgrid/test/audio-transcripts-all-clean-20260607T022347Z</dd></div>
+              <div><dt>Search index</dt><dd>1846 → 1850 documents</dd></div>
+              <div><dt>Segments</dt><dd>6099 → 6103</dd></div>
+              <div><dt>Query validated</dt><dd>starkgrid-runner-smoke-001</dd></div>
+              <div><dt>Result type</dt><dd>audio-transcript</dd></div>
+              <div><dt>Kafka consumer lag</dt><dd>0 for Argus, Themis, Hermes, and Hephaestus</dd></div>
+              <div><dt>Hermes registry</dt><dd>+4 records</dd></div>
+            </dl>
+            <h4>Why it matters</h4>
+            <ul class="check-list">
+              <li>Converts spoken notes into searchable evidence.</li>
+              <li>Keeps source audio and derived transcript artifacts linked by manifest.</li>
+              <li>Shows failure visibility through Athena Observer DLQ/failure evidence instead of silent loss.</li>
+              <li>Athena surfaces read-only DLQ/failure evidence: 100 of 342 recent signals in the Observer panel, without automatic retry or DLQ mutation.</li>
+              <li>Demonstrates practical SMB/local-appliance workflow potential.</li>
+            </ul>
+          </aside>
+        </div>
       </section>
 
       <section id="caveats" class="section alt-section">
@@ -115,7 +198,9 @@
             <li>GPU OCR was intentionally not enabled for this proof path.</li>
             <li>Embeddings were intentionally not enabled for this proof path.</li>
             <li>Ultron GTX 1080 evidence demonstrates remote GPU-capable worker visibility, not production GPU OCR acceleration.</li>
-            <li>This export excludes private runtime evidence files, internal operational commands, credentials, key material, and machine access details.</li>
+            <li>The audio lane was manually dispatched in MVP form; Whisper transcripts are AI-generated derived evidence that require source-audio review for high-stakes use.</li>
+            <li>Hephaestus vector backend contract is under active hardening; vector search is not claimed as production-ready.</li>
+            <li>This export excludes private runtime evidence files, internal operational commands, secrets, tokens, SSH information, and machine access details.</li>
           </ul>
         </div>
       </section>
@@ -127,7 +212,7 @@
         </div>
         <div class="card-grid">
           <article class="card"><h3>Architecture judgment</h3><p>Clear module ownership, deterministic processing boundaries, and evidence-aware scope control.</p></article>
-          <article class="card"><h3>Platform discipline</h3><p>Linux, Docker, workflow automation, source-backed summaries, and repeatable rehearsal practices.</p></article>
+          <article class="card"><h3>Platform discipline</h3><p>Linux, Docker, Kafka, workflow automation, source-backed summaries, and repeatable rehearsal practices.</p></article>
           <article class="card"><h3>Operator empathy</h3><p>Automation framed as a way to reduce ambiguity, preserve receipts, and keep reviewable decisions visible.</p></article>
         </div>
       </section>
@@ -136,8 +221,12 @@
     <footer class="site-footer">
       <div class="container footer-grid">
         <p>&copy; 2026 Quentin McClellan. Sanitized StarkGrid public case study.</p>
-        <a href="index.html">Back to home</a>
-        <a href="mailto:contact@quentinmcclellan.com">Email Quentin</a>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+          <a href="mailto:contact@quentinmcclellan.com">Email Quentin</a>
+        </nav>
       </div>
     </footer>
   </body>

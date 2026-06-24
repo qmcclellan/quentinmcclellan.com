@@ -6,7 +6,7 @@
     <title>Quentin McClellan | Portfolio</title>
     <meta
       name="description"
-      content="Public portfolio homepage for Quentin McClellan, founder and systems builder behind the sanitized StarkGrid case study."
+      content="Public portfolio for Quentin McClellan, founder and systems builder. Evidence-first systems for operations, automation, and AI readiness."
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -16,10 +16,11 @@
         <a class="brand" href="index.html" aria-label="Quentin McClellan portfolio home">Quentin McClellan</a>
         <nav class="site-nav" aria-label="Primary navigation">
           <a aria-current="page" href="index.html">Home</a>
-          <a href="starkgrid.html">StarkGrid case study</a>
+          <a href="starkgrid.html">StarkGrid</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
           <a href="mailto:contact@quentinmcclellan.com">Email</a>
           <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="#resume">Resume</a>
         </nav>
       </div>
     </header>
@@ -36,13 +37,14 @@
         <div class="cta-row" aria-label="Portfolio actions">
           <a class="button primary" href="starkgrid.html">View StarkGrid case study</a>
           <a class="button" href="#work">What I build</a>
+          <a class="button" href="#engineering-proof">Engineering proof projects</a>
         </div>
       </section>
 
       <section id="work" class="section container">
         <div class="section-heading">
           <p class="eyebrow">What I build</p>
-          <h2>Practical architecture for evidence, operations, and automation readiness.</h2>
+          <h2>Practical architecture for evidence, operations, and automation.</h2>
         </div>
         <div class="card-grid">
           <article class="card">
@@ -58,6 +60,14 @@
             <p>Dashboards, summaries, and portfolio-safe proof points that make it clear what happened and which evidence supports each claim.</p>
           </article>
           <article class="card">
+            <h3>Developer platform tooling</h3>
+            <p>CLI-first scaffolding, schema-driven templates, validation commands, and Nexus artifact integration for repeatable project creation.</p>
+          </article>
+          <article class="card">
+            <h3>Evidence distillation</h3>
+            <p>Structured pipelines that normalize operational logs, produce incident artifacts, and expose bounded evidence to AI clients safely.</p>
+          </article>
+          <article class="card">
             <h3>Local-first infrastructure</h3>
             <p>Linux, Docker, scripting, repository discipline, and lab hardware arranged for controlled rehearsal, cost awareness, and explainability.</p>
           </article>
@@ -70,13 +80,17 @@
             <p class="eyebrow">Featured project</p>
             <h2>StarkGrid</h2>
             <p>
-              StarkGrid is a private MVP/demonstration project for deterministic artifact ingestion, evidence review, and governed automation.
-              This public page presents a sanitized case study only. It does not expose private source code, runtime evidence files, private
-              machine details, secrets, or internal operations.
+              StarkGrid is a private MVP/demonstration platform for deterministic artifact ingestion, evidence review, and governed automation.
+              Built in Java across seven active modules — Janus, Demeter, Argus, Themis, Hermes, Hephaestus, and Mnemosyne — running on
+              Kafka and Docker Compose.
             </p>
             <p>
-              The case study demonstrates how I think about systems: keep module boundaries clear, prove claims with receipts, and preserve
-              caveats when a capability has not been enabled or validated for production.
+              The system runs distributed across two lab nodes: Jarvis as the primary control-plane and Ultron as a GPU-capable remote worker.
+              Athena (React) and athena-observer (FastAPI) provide read-only evidence review and DLQ visibility.
+            </p>
+            <p>
+              The case study demonstrates clear module ownership, deterministic processing boundaries, source-backed observability, and
+              guardrailed claims — with explicit caveats for what has not been enabled.
             </p>
             <a class="button primary" href="starkgrid.html">Open the case study</a>
           </div>
@@ -85,9 +99,79 @@
             <dl class="metrics-list">
               <div><dt>Final Rocketbook proof run</dt><dd>rocketbook-20260603T014846Z</dd></div>
               <div><dt>Source-backed documents</dt><dd>1842</dd></div>
-              <div><dt>Worker evidence source</dt><dd>athena-runtime-plans-recent</dd></div>
+              <div><dt>Distributed worker evidence</dt><dd>Ultron GTX 1080 remote worker captured</dd></div>
+              <div><dt>Audio lane benchmark</dt><dd>audio-all-clean-search-20260607T023050Z</dd></div>
+              <div><dt>Audio search index growth</dt><dd>1846 → 1850 documents</dd></div>
             </dl>
           </aside>
+        </div>
+      </section>
+
+      <section id="engineering-proof" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Engineering Proof Projects</p>
+          <h2>Four public projects demonstrating the underlying disciplines.</h2>
+          <p>
+            StarkGrid is the main platform. Forge, SRE Log Pipeline, Forge MCP, and Operator Evidence MCP are public projects that
+            demonstrate repeatable scaffolding, evidence distillation, validation discipline, and safe AI-facing evidence interfaces.
+          </p>
+        </div>
+        <div class="card-grid proof-project-grid" aria-label="Supporting engineering proof projects">
+          <article class="card proof-project-card">
+            <p class="eyebrow">Forge · v0.2.0</p>
+            <h3>Developer Platform CLI</h3>
+            <p>Python CLI for creating standardized project lanes with schema-driven templates, validation, Nexus artifact integration, and release workflows.</p>
+            <h4>Proof points</h4>
+            <ul class="check-list">
+              <li>Three project templates: <code>python-worker</code>, <code>java-spring-service</code>, <code>node-dashboard</code></li>
+              <li><code>forge doctor</code> validates local prerequisites</li>
+              <li><code>forge project inspect</code> and Nexus template packaging</li>
+              <li>28 tests; tagged release v0.2.0</li>
+            </ul>
+            <p class="role-fit"><strong>Role fit:</strong> Developer tooling, platform engineering, release discipline</p>
+            <a class="button" href="forge.html">View Forge case study</a>
+          </article>
+          <article class="card proof-project-card">
+            <p class="eyebrow">SRE Log Pipeline · v0.2.0</p>
+            <h3>Evidence Distiller</h3>
+            <p>Python JSONL pipeline that turns noisy logs into structured incident evidence for debugging, incident review, and postmortem workflows.</p>
+            <h4>Proof points</h4>
+            <ul class="check-list">
+              <li>Zero runtime dependencies; timezone-aware benchmark-window filtering</li>
+              <li>Incident evidence schema v1.0; StarkGrid adapter</li>
+              <li>8 test files covering batch, window, distillation, storage, and adapter behavior</li>
+              <li>Tagged release v0.2.0</li>
+            </ul>
+            <p class="role-fit"><strong>Role fit:</strong> DevOps, SRE, observability, incident response</p>
+            <a class="button" href="sre-log-pipeline.html">View SRE Log Pipeline case study</a>
+          </article>
+          <article class="card proof-project-card">
+            <p class="eyebrow">Forge MCP · v0.1.1</p>
+            <h3>Developer Platform MCP Server</h3>
+            <p>Read-only MCP server that exposes Forge repository knowledge — templates, validation commands, project structure — to AI clients without write access.</p>
+            <h4>Proof points</h4>
+            <ul class="check-list">
+              <li>10-tool contract validated by test suite</li>
+              <li>No write or execution tools; request validation</li>
+              <li>Bounded responses; version v0.1.1</li>
+            </ul>
+            <p class="role-fit"><strong>Role fit:</strong> AI tooling, developer platform, MCP integration</p>
+            <a class="button" href="forge.html#forge-mcp">View Forge MCP</a>
+          </article>
+          <article class="card proof-project-card">
+            <p class="eyebrow">Operator Evidence MCP · v0.1.1</p>
+            <h3>Incident Evidence MCP Server</h3>
+            <p>Read-only MCP server that exposes bounded incident evidence and operational summaries to AI clients without write access or execution authority.</p>
+            <h4>Proof points</h4>
+            <ul class="check-list">
+              <li>9-tool contract: evidence discovery, incident listing, summaries, trace samples</li>
+              <li>Slug/path validation; bounded results and truncation handling</li>
+              <li>Security boundary tested; version reporting via <code>serverInfo</code></li>
+              <li>Version v0.1.1</li>
+            </ul>
+            <p class="role-fit"><strong>Role fit:</strong> AI infrastructure, incident tooling, secure evidence retrieval</p>
+            <a class="button" href="sre-log-pipeline.html#operator-evidence-mcp">View Operator Evidence MCP</a>
+          </article>
         </div>
       </section>
 
@@ -101,25 +185,19 @@
         </p>
         <p>
           <strong>LinkedIn:</strong>
-          <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">https://www.linkedin.com/in/quentinmmcclellan/</a>
+          <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">linkedin.com/in/quentinmmcclellan</a>
         </p>
-      </section>
-
-      <section id="resume" class="section container compact-section">
-        <p class="eyebrow">Resume</p>
-        <h2>Download my DevOps / platform resume.</h2>
-        <p>The public resume is a one-page, portfolio-safe export with no phone number, private infrastructure details, or internal evidence paths.</p>
-        <div class="cta-row" aria-label="Resume downloads">
-          <a class="button primary" href="resume/quentin-mcclellan-devops-platform-resume.pdf">Download PDF</a>
-          <a class="button" href="resume/quentin-mcclellan-devops-platform-resume.docx">Download DOCX</a>
-        </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <div class="container footer-grid">
         <p>&copy; 2026 Quentin McClellan. Public portfolio export.</p>
-        <a href="starkgrid.html">StarkGrid case study</a>
+        <nav aria-label="Footer navigation">
+          <a href="starkgrid.html">StarkGrid</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+        </nav>
       </div>
     </footer>
   </body>

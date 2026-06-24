@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forge Case Study | Quentin McClellan</title>
+    <meta
+      name="description"
+      content="Forge case study: developer platform CLI for standardized project scaffolding with schema-driven templates, validation, and Nexus artifact integration."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-shell">
+        <a class="brand" href="index.html" aria-label="Quentin McClellan portfolio home">Quentin McClellan</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">Home</a>
+          <a href="starkgrid.html">StarkGrid</a>
+          <a aria-current="page" href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+          <a href="mailto:contact@quentinmcclellan.com">Email</a>
+          <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <p class="eyebrow">Public project · v0.2.0</p>
+        <h1>Forge: developer platform CLI for standardized project scaffolding.</h1>
+        <p class="lead">
+          Forge is a Python CLI that creates standardized project lanes from schema-driven templates. It validates local prerequisites,
+          packages and publishes templates to a Nexus artifact registry, and produces projects with consistent structure, documentation,
+          and release workflows.
+        </p>
+        <div class="cta-row" aria-label="Forge case study actions">
+          <a class="button primary" href="#proof">Review proof</a>
+          <a class="button" href="#templates">Templates</a>
+          <a class="button" href="#forge-mcp">Forge MCP</a>
+          <a class="button" href="https://github.com/qmcclellan/forge" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Problem</p>
+          <h2>Project scaffolding without discipline creates scaffolding without standards.</h2>
+        </div>
+        <p>
+          Starting a new service or pipeline is often the moment structure breaks down: inconsistent layouts, missing docs, undeclared
+          dependencies, and no repeatable path from creation to release. Forge was built to replace ad-hoc project setup with a
+          governed, template-driven workflow that produces consistent structure from the first commit.
+        </p>
+      </section>
+
+      <section class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Commands</p>
+            <h2>Three commands cover creation, validation, and inspection.</h2>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3><code>forge new</code></h3>
+              <p>Creates a new project from a selected template. Accepts project name, template type, and Nexus pull flag.
+              Renders the template directory, writes project metadata, initializes git, and optionally sets a remote origin.</p>
+            </article>
+            <article class="card">
+              <h3><code>forge doctor</code></h3>
+              <p>Validates local development prerequisites: git, Python version, Docker, and other template-specific requirements.
+              Outputs a pass/fail checklist. Supports <code>--json</code> for machine-readable output.</p>
+            </article>
+            <article class="card">
+              <h3><code>forge project inspect</code></h3>
+              <p>Inspects an existing project directory for conformance to Forge's expected structure. Reports missing files,
+              metadata status, and structural drift. Supports <code>--json</code> for CI integration.</p>
+            </article>
+            <article class="card">
+              <h3>Nexus artifact commands</h3>
+              <p><code>forge template package</code>, <code>publish</code>, <code>pull</code>, <code>list</code>, and <code>info</code>
+              integrate with a Nexus raw repository for template versioning, distribution, and discovery.</p>
+            </article>
+            <article class="card">
+              <h3>Schema-driven generation</h3>
+              <p>Templates are rendered from a manifest-driven structure. Each template directory contains the file tree,
+              metadata schema, and documentation stubs. Rendering is deterministic and repeatable.</p>
+            </article>
+            <article class="card">
+              <h3>Generated-project evidence</h3>
+              <p>The SRE Log Pipeline was scaffolded from Forge's <code>python-worker</code> template.
+              That project reached v0.2.0 with 8 test files, a Jenkinsfile, and a StarkGrid adapter —
+              demonstrating that Forge-generated structure is production-discipline-ready.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="templates" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Templates</p>
+          <h2>Three templates covering the primary project types.</h2>
+        </div>
+        <div class="module-grid" aria-label="Forge templates">
+          <article>
+            <strong>python-worker</strong>
+            <span>Python service or pipeline worker. Includes <code>pyproject.toml</code>, test structure, Dockerfile, Jenkinsfile, and release runbook. Used to scaffold SRE Log Pipeline.</span>
+          </article>
+          <article>
+            <strong>java-spring-service</strong>
+            <span>Spring Boot service. Includes Maven POM, test structure, Dockerfile, and Jenkinsfile. Consistent with StarkGrid module conventions.</span>
+          </article>
+          <article>
+            <strong>node-dashboard</strong>
+            <span>Node.js frontend or dashboard project. Includes package.json, Vite or equivalent build config, and static export structure.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="proof" class="section alt-section">
+        <div class="container split">
+          <div>
+            <p class="eyebrow">Proof evidence</p>
+            <h2>28 tests, a tagged release, and a generated downstream project.</h2>
+            <p>
+              Forge has 28 tests covering CLI behavior, template rendering, doctor validation, Nexus artifact commands, and project
+              inspection. The test suite runs without external dependencies.
+            </p>
+            <p>
+              The proof is not limited to the tool itself. The SRE Log Pipeline — a downstream project scaffolded from Forge's
+              <code>python-worker</code> template — reached its own v0.2.0 release with incident evidence schema v1.0, a StarkGrid adapter,
+              and 8 test files. That downstream maturity validates the template's structural discipline.
+            </p>
+          </div>
+          <aside class="proof-card" aria-label="Forge proof summary">
+            <h3>Forge proof snapshot</h3>
+            <dl class="metrics-list">
+              <div><dt>Tagged release</dt><dd>v0.2.0</dd></div>
+              <div><dt>Test count</dt><dd>28 tests passing</dd></div>
+              <div><dt>Templates</dt><dd>python-worker, java-spring-service, node-dashboard</dd></div>
+              <div><dt>Generated downstream project</dt><dd>SRE Log Pipeline (v0.2.0)</dd></div>
+              <div><dt>Nexus integration</dt><dd>package, publish, pull, list, info</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section id="forge-mcp" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Supporting project · Forge MCP · v0.1.1</p>
+          <h2>Read-only MCP server for Forge repository knowledge.</h2>
+        </div>
+        <div class="split">
+          <div>
+            <p>
+              Forge MCP is a read-only Model Context Protocol server that exposes Forge's templates, validation commands, project
+              structure, and documentation to AI clients. It was built to let AI tools assist with Forge usage without granting
+              write access, execution authority, or access to private project content.
+            </p>
+            <p>
+              The server implements a 10-tool contract validated by a dedicated contract test. Any addition, removal, or rename
+              of a tool is a breaking change that must fail the contract test first.
+            </p>
+            <h4>Integration boundary</h4>
+            <ul class="check-list">
+              <li>Forge MCP reads Forge's template files and documentation; it does not write, create projects, or execute commands.</li>
+              <li>All tools are read-only. The contract test (<code>test_tool_contract.py</code>) enforces the exact tool name set.</li>
+              <li>Request validation prevents malformed inputs from reaching the filesystem.</li>
+              <li>Responses are bounded to prevent context overflow.</li>
+            </ul>
+          </div>
+          <aside class="proof-card" aria-label="Forge MCP proof summary">
+            <h3>Forge MCP proof snapshot</h3>
+            <dl class="metrics-list">
+              <div><dt>Version</dt><dd>v0.1.1</dd></div>
+              <div><dt>Tool count</dt><dd>10 tools</dd></div>
+              <div><dt>Write tools</dt><dd>None — read-only contract</dd></div>
+              <div><dt>Test files</dt><dd>11 test files covering contract, paths, limits, config, documents, templates</dd></div>
+            </dl>
+            <h4>Tool contract (v0.1.1)</h4>
+            <ul class="check-list">
+              <li><code>get_forge_overview</code></li>
+              <li><code>list_templates</code></li>
+              <li><code>get_template_summary</code></li>
+              <li><code>list_template_files</code></li>
+              <li><code>read_template_file</code></li>
+              <li><code>get_project_structure</code></li>
+              <li><code>get_validation_commands</code></li>
+              <li><code>read_forge_document</code></li>
+              <li><code>explain_forge_doctor</code></li>
+              <li><code>get_template_change_checklist</code></li>
+            </ul>
+          </aside>
+        </div>
+        <div class="section-heading-full">
+          <h4>Current maturity</h4>
+        </div>
+        <ul class="check-list caveat-list">
+          <li>Forge MCP is an engineering proof at v0.1.1 — not a production deployment.</li>
+          <li>No git tags have been pushed; pyproject.toml version v0.1.1 is authoritative.</li>
+          <li>The server is designed to run locally alongside a Forge checkout; it does not expose a public endpoint.</li>
+        </ul>
+      </section>
+
+      <section class="section container compact-section">
+        <p class="eyebrow">Current limitations</p>
+        <h2>What Forge does not claim.</h2>
+        <ul class="check-list caveat-list">
+          <li>pyproject.toml version <code>0.1.0</code> does not match tag <code>v0.2.0</code>. The tag is authoritative for release status.</li>
+          <li>Forge is a working development system built for a local lab environment; it is not a commercial platform product.</li>
+          <li>Nexus integration assumes a local Nexus instance; no public registry is implied.</li>
+          <li>No production multi-tenant usage is claimed.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <p>&copy; 2026 Quentin McClellan. Public portfolio export.</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="starkgrid.html">StarkGrid</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
