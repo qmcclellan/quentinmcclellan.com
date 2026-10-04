@@ -17,6 +17,7 @@
         <nav class="site-nav" aria-label="Primary navigation">
           <a aria-current="page" href="index.html">Home</a>
           <a href="starkgrid.html">StarkGrid</a>
+          <a href="gameq.html">GameQ</a>
           <a href="forge.html">Forge</a>
           <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
           <a href="mailto:contact@quentinmcclellan.com">Email</a>
@@ -36,6 +37,7 @@
         </p>
         <div class="cta-row" aria-label="Portfolio actions">
           <a class="button primary" href="starkgrid.html">View StarkGrid case study</a>
+          <a class="button primary" href="gameq.html">View GameQ case study</a>
           <a class="button" href="#work">What I build</a>
           <a class="button" href="#engineering-proof">Engineering proof projects</a>
         </div>
@@ -107,13 +109,44 @@
         </div>
       </section>
 
+      <section class="section alt-section">
+        <div class="container split">
+          <div>
+            <p class="eyebrow">Featured project</p>
+            <h2>GameQ</h2>
+            <p>
+              GameQ is a private, self-hosted multi-seat interactive gaming runtime. It turns supported clients into
+              independent gaming endpoints backed by one centrally managed machine, with each seat's input, audio, and
+              workload lifecycle governed and isolated from the others on one shared GPU.
+            </p>
+            <p>
+              The case study demonstrates source-level root-cause debugging, durable identity modeling under a kernel
+              that freely reuses device names and numbers, and a disciplined, rejected-narrower-fixes-first path to a
+              hands-off automatic-recovery mechanism — proven across 15 consecutive restart cycles plus a real
+              streaming-client confirmation, with current limitations stated as plainly as the proof.
+            </p>
+            <a class="button primary" href="gameq.html">Open the case study</a>
+          </div>
+          <aside class="proof-card" aria-label="Sanitized GameQ proof summary">
+            <h3>Sanitized proof snapshot</h3>
+            <dl class="metrics-list">
+              <div><dt>Concurrent seats, one shared GPU</dt><dd>2, independently isolated</dd></div>
+              <div><dt>Hands-off restart recovery soak</dt><dd>15 / 15 cycles</dd></div>
+              <div><dt>Real-client keyboard/mouse after restart</dt><dd>Confirmed</dd></div>
+              <div><dt>Workload families proven</dt><dd>Normalized emulator + Steam/Proton</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
       <section id="engineering-proof" class="section container">
         <div class="section-heading">
           <p class="eyebrow">Engineering Proof Projects</p>
           <h2>Four public projects demonstrating the underlying disciplines.</h2>
           <p>
-            StarkGrid is the main platform. Forge, SRE Log Pipeline, Forge MCP, and Operator Evidence MCP are public projects that
-            demonstrate repeatable scaffolding, evidence distillation, validation discipline, and safe AI-facing evidence interfaces.
+            StarkGrid and GameQ are the two main platforms. Forge, SRE Log Pipeline, Forge MCP, and Operator Evidence MCP
+            are public projects that demonstrate repeatable scaffolding, evidence distillation, validation discipline,
+            and safe AI-facing evidence interfaces.
           </p>
         </div>
         <div class="card-grid proof-project-grid" aria-label="Supporting engineering proof projects">
@@ -195,6 +228,7 @@
         <p>&copy; 2026 Quentin McClellan. Public portfolio export.</p>
         <nav aria-label="Footer navigation">
           <a href="starkgrid.html">StarkGrid</a>
+          <a href="gameq.html">GameQ</a>
           <a href="forge.html">Forge</a>
           <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
         </nav>

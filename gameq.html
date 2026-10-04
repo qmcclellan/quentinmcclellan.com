@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GameQ Case Study | Quentin McClellan</title>
+    <meta
+      name="description"
+      content="GameQ case study: a governed multi-seat gaming runtime that turns supported clients into independent gaming endpoints backed by one centrally managed machine."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-shell">
+        <a class="brand" href="index.html" aria-label="Quentin McClellan portfolio home">Quentin McClellan</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">Home</a>
+          <a href="starkgrid.html">StarkGrid</a>
+          <a aria-current="page" href="gameq.html">GameQ</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+          <a href="mailto:contact@quentinmcclellan.com">Email</a>
+          <a href="https://www.linkedin.com/in/quentinmmcclellan/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <p class="eyebrow">Private project · sanitized public case study</p>
+        <h1>GameQ: a governed multi-seat gaming runtime, built from one shared machine.</h1>
+        <p class="lead">
+          GameQ is a self-hosted, multi-seat interactive gaming runtime. It turns supported clients — a tablet, a TV, a
+          laptop — into independent gaming endpoints backed by one centrally managed machine, with each seat's input,
+          audio, and workload lifecycle governed and isolated from the others.
+        </p>
+        <div class="cta-row" aria-label="GameQ case study actions">
+          <a class="button primary" href="#recovery">Review automatic-recovery proof</a>
+          <a class="button" href="#seat">What a Seat is</a>
+          <a class="button" href="#limitations">Current limitations</a>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Problem</p>
+          <h2>Running more than one independent gaming session from one machine is harder than it looks.</h2>
+        </div>
+        <p>
+          A single machine with one GPU can technically run several game-streaming sessions at once, but naively sharing
+          it creates real hazards: one session's keyboard can leak into another's, one player's controller can end up
+          driving someone else's game, audio can silently route to the wrong session after a reconnect, and a routine
+          restart of the streaming service can leave a session's input permanently broken until someone notices and
+          intervenes by hand. GameQ was built to make each session — called a <strong>Seat</strong> — a genuinely
+          independent, self-recovering unit on top of one shared host, rather than a fragile improvisation.
+        </p>
+      </section>
+
+      <section id="seat" class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Architecture · what a Seat is</p>
+            <h2>A Seat is a durable, isolated resource boundary — not just a container.</h2>
+          </div>
+          <p>
+            A Seat is the object GameQ actually governs: a container running its own display, audio server, and input
+            view, paired with explicit admission rules for which devices are allowed into it and when. Node names,
+            container IDs, and device numbers are all treated as transient — ownership is tracked by durable identity,
+            never inferred from a path or a number that the kernel can reuse. Two Seats are proven running concurrently
+            today, on one shared NVIDIA GPU, with independent lifecycles end to end.
+          </p>
+          <div class="module-grid" aria-label="GameQ object model">
+            <article><strong>Profile</strong><span>Durable per-player state: saves and configuration, external to any one container.</span></article>
+            <article><strong>Seat</strong><span>The durable, user-facing resource and session authority — one per independent gaming endpoint.</span></article>
+            <article><strong>SeatSession</strong><span>A transient, explicitly admitted streaming-client connection generation.</span></article>
+            <article><strong>SeatContainer</strong><span>The replaceable runtime environment a Seat currently runs in.</span></article>
+            <article><strong>WorkloadLease</strong><span>Runtime authority for whichever game/emulator is currently active.</span></article>
+            <article><strong>DeviceIdentity</strong><span>The exact kernel object behind an input device — never a reused node name or number.</span></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Workload / runtime model</p>
+          <h2>Two governed launch families, one normalized lifecycle.</h2>
+        </div>
+        <p>
+          Every workload — an emulator system or a Steam/Proton title — launches through one of two governed chains,
+          reaches real gameplay, and exits back to the library view cleanly, through the same lifecycle regardless of
+          family. Steam identity (which player's save/profile data is mounted) is kept separate from Steam's own
+          entitlement and runtime capability, so switching whose library a Seat uses is a mount change, not a code or
+          credential change. Normalized emulator families and Steam/Proton titles are both proven launching, running,
+          saving, and exiting cleanly through this same path.
+        </p>
+      </section>
+
+      <section class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Input isolation</p>
+            <h2>Nothing is exposed to a Seat until GameQ explicitly admits it.</h2>
+          </div>
+          <p>
+            Each Seat gets a private input device view, default-deny: a device only becomes visible inside a Seat after
+            GameQ has attributed it to that Seat and explicitly admitted it into an active session window. The host's own
+            physical admin keyboard/mouse is proven to never leak into any Seat — isolation confirmed by construction and
+            by direct live testing. A remote player's keyboard and mouse are treated as durable Seat infrastructure
+            (created once by the streaming process and meant to persist), while touch, pen, and controller input are
+            treated as per-connection — each class has its own observed, proven lifecycle, and the two are never
+            conflated.
+          </p>
+          <ul class="check-list">
+            <li>Private, per-Seat input view — proven, zero cross-seat leakage.</li>
+            <li>Host admin keyboard/mouse isolation — proven, zero leakage into any Seat.</li>
+            <li>Canonical remote keyboard/mouse treated as Seat infrastructure — proven.</li>
+            <li>Controller reconnect/re-arm across repeated disconnect cycles — proven.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Audio isolation</p>
+          <h2>Each Seat gets its own audio path — classified by what created the sound, not its name.</h2>
+        </div>
+        <p>
+          Each Seat has its own canonical audio sink. A seat-local invariant enforcer watches for the specific way the
+          streaming layer can silently reroute a workload's audio onto the wrong internal device after a reconnect, and
+          corrects it automatically. It identifies "this is a GameQ workload's audio" by which governed process tree
+          produced it, not by application name — so it generalizes to new emulator workloads without new code for each
+          one. Two-seat simultaneous audio, heterogeneous clients, and independent per-seat reconnects are all proven.
+        </p>
+        <p class="caveat-note">
+          <strong>Disclosed limitation:</strong> this same reconnect-safety protection does not yet cover Steam/Proton
+          titles — a different launch path within the same engine makes the audio-ownership signal this mechanism relies
+          on unavailable for that family today. Investigated directly and documented rather than worked around with a
+          forced, unproven fix.
+        </p>
+      </section>
+
+      <section class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Client / stream lifecycle</p>
+            <h2>Real streaming clients, proven driving real input.</h2>
+          </div>
+          <p>
+            GameQ's remote-access layer is built on an open-source game-streaming server and client protocol. Real
+            clients — a tablet and a desktop streaming client — are proven connecting, disconnecting, and reconnecting
+            across repeated cycles, with the remote session's keyboard and mouse surviving a client disconnect and
+            continuing to work for whichever client reconnects next.
+          </p>
+        </div>
+      </section>
+
+      <section id="recovery" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Automatic recovery</p>
+          <h2>The streaming service can restart without a human reprovisioning anything by hand.</h2>
+        </div>
+        <p>
+          The hardest-won result in this project: the streaming service occasionally needs to restart (a crash, an
+          update, an operator action), and a restart recreates that Seat's virtual keyboard and mouse from scratch.
+          Early in the project, recovering from this required a manual, multi-step provisioning sequence — a real
+          product-blocking gap. GameQ now detects the restart, reconciles the stale device state, and re-admits the
+          fresh devices automatically, with no manual command of any kind.
+        </p>
+        <p>
+          The remaining defect behind that gap was root-caused directly against the exact installed display-server input
+          library's own source: a removed virtual input device's file handle could still be held open by the display
+          server or the host's own session manager well after the device itself was gone — regardless of the normal
+          removal notification already firing correctly. Several narrower fixes were tried and rejected first — disabling
+          the device through the display server's own control tool, re-sending the removal notification, triggering a
+          lower-level device rescan, restarting the smaller of the two processes holding it open — each either failed
+          outright or only partly worked. The fix that actually closed the gap touches neither the display server nor
+          the session manager at all: GameQ releases <em>its own</em> internal mount ownership of the stale device,
+          which frees the path for a fresh device without ever reaching into another process's state.
+        </p>
+        <div class="split">
+          <div>
+            <ul class="check-list">
+              <li>15 of 15 consecutive hands-off streaming-service restarts recovered automatically, no manual step of any kind.</li>
+              <li>A real streaming client, carried through a live restart, confirmed its keyboard and mouse worked again after reconnecting.</li>
+              <li>The fix never stops, restarts, or signals the display server or the session manager — it only releases GameQ's own resource.</li>
+            </ul>
+          </div>
+          <aside class="proof-card" aria-label="Automatic recovery proof summary">
+            <h3>Recovery proof snapshot</h3>
+            <dl class="metrics-list">
+              <div><dt>Hands-off restart cycles</dt><dd>15 / 15 recovered automatically</dd></div>
+              <div><dt>Manual steps required</dt><dd>Zero</dd></div>
+              <div><dt>Real-client keyboard/mouse after restart</dt><dd>Confirmed working</dd></div>
+              <div><dt>Peer-seat isolation during recovery</dt><dd>Confirmed unaffected</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Multi-seat proof</p>
+            <h2>Two independent seats, one shared GPU, zero cross-contamination.</h2>
+          </div>
+          <p>
+            Both seats are proven running concurrently on the same physical host and GPU — one running a Steam/Proton
+            title, the other an independently running emulator session — with separate process namespaces, separate
+            audio servers, and low, headroom-rich GPU utilization for both workloads together. Isolation is proven in
+            both directions: restarting one seat's streaming service never touches the other seat's input, audio, or
+            running game. This is a functional-concurrency proof, deliberately not presented as a maximum-capacity
+            benchmark.
+          </p>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Appliance 0.1 direction</p>
+          <h2>The product direction: turn this engineering baseline into a reproducible appliance.</h2>
+        </div>
+        <p>
+          The working name for that direction is <strong>Appliance 0.1</strong>: take what is already proven here and
+          package it as something a non-developer could use without ever seeing a terminal. That framing exists today
+          as a product contract with an honest, dated blocker list — not as a shipped product.
+        </p>
+      </section>
+
+      <section id="limitations" class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Current limitations</p>
+            <h2>What GameQ does not claim.</h2>
+          </div>
+          <ul class="check-list caveat-list">
+            <li>GameQ's source repository is private; this page is a sanitized public case study of a real, running system.</li>
+            <li>No public, reproducible build/provisioning path exists yet — today's two seats were hand-built and hand-evolved, not provisioned from a blank machine.</li>
+            <li>There is no polished, consumer-presented library/menu interface yet — today's library browsing surface is an existing open-source emulator frontend, running in an operator-grade presentation.</li>
+            <li>An actively running game is currently restarted, not preserved, when the streaming service restarts — a separate, newly-identified lifecycle question, tracked but not yet solved. The streaming-connection lifecycle and the running-game lifecycle are coupled by a straightforward service dependency today and are expected to be evaluated as two separate concerns in a future pass.</li>
+            <li>Steam/Proton audio does not yet have the same reconnect-safety protection emulator workloads already have (see Audio isolation above).</li>
+            <li>First-time client pairing uses the streaming server's own pairing flow directly; no GameQ-specific onboarding wraps it yet.</li>
+            <li>Multi-seat proof is functional concurrency on one shared GPU, not a maximum-capacity benchmark.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">What this demonstrates</p>
+          <h2>Systems engineering under real constraints, with the proof to back it.</h2>
+        </div>
+        <div class="card-grid">
+          <article class="card">
+            <h3>Source-level root-causing</h3>
+            <p>Diagnosed a hard, intermittent production defect by reading the exact installed system library's own source rather than guessing from symptoms.</p>
+          </article>
+          <article class="card">
+            <h3>Disciplined fix selection</h3>
+            <p>Tested and rejected narrower fixes in order of increasing disruption before committing to the one that never touches another process's state.</p>
+          </article>
+          <article class="card">
+            <h3>Isolation and identity modeling</h3>
+            <p>Built durable ownership tracking (Seats, device identity, admission windows) specifically so the kernel reusing a number or a name could never be mistaken for continuity.</p>
+          </article>
+          <article class="card">
+            <h3>Evidence discipline</h3>
+            <p>Every claim above is backed by a live, repeatable, numbered proof — including the limitations, stated as plainly as the successes.</p>
+          </article>
+          <article class="card">
+            <h3>Product framing</h3>
+            <p>Carries a real engineering baseline through to a named, dated product contract with an honest blocker list, not just a demo.</p>
+          </article>
+          <article class="card">
+            <h3>Linux/platform depth</h3>
+            <p>Containers, mount namespaces, device/udev lifecycle, systemd service dependencies, and GPU sharing, all reasoned about directly rather than through a framework.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <p>&copy; 2026 Quentin McClellan. Sanitized GameQ public case study.</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="starkgrid.html">StarkGrid</a>
+          <a href="forge.html">Forge</a>
+          <a href="sre-log-pipeline.html">SRE Log Pipeline</a>
+          <a href="mailto:contact@quentinmcclellan.com">Email Quentin</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
